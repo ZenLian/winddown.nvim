@@ -16,11 +16,17 @@ function M.get()
     EndOfBuffer = { fg = C.base }, -- filler lines (~) after the end of the buffer.  By default, this is highlighted like |hl-NonText|.
     ErrorMsg = { fg = C.red, style = { "bold", "italic" } }, -- error messages on the command line
     VertSplit = { fg = O.transparent_background and C.surface1 or C.crust }, -- the column separating vertically split windows
-    Folded = { fg = C.blue, bg = O.transparent_background and C.none or C.surface1 }, -- line used for closed folds
+    Folded = {
+      fg = C.blue,
+      bg = O.transparent_background and C.none or C.surface1,
+    }, -- line used for closed folds
     FoldColumn = { fg = C.overlay0 }, -- 'foldcolumn'
     SignColumn = { fg = C.surface1 }, -- column where |signs| are displayed
     SignColumnSB = { bg = C.crust, fg = C.surface1 }, -- column where |signs| are displayed
-    Substitute = { bg = C.surface1, fg = U.vary_color({ latte = C.red }, C.pink) }, -- |:substitute| replacement text highlighting
+    Substitute = {
+      bg = C.surface1,
+      fg = U.vary_color({ latte = C.red }, C.pink),
+    }, -- |:substitute| replacement text highlighting
     LineNr = { fg = U.vary_color({ latte = C.base0 }, C.surface1) }, -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is seC.
     CursorLineNr = { fg = C.lavender }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line. highlights the number in numberline.
     MatchParen = { fg = C.peach, style = { "bold" } }, -- The character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
@@ -38,9 +44,15 @@ function M.get()
         or C.base,
     }, -- normal text in non-current windows
     NormalSB = { fg = C.text, bg = C.crust }, -- normal text in non-current windows
-    NormalFloat = { fg = C.text, bg = O.transparent_background and C.none or C.mantle }, -- Normal text in floating windows.
+    NormalFloat = {
+      fg = C.text,
+      bg = O.transparent_background and C.none or C.mantle,
+    }, -- Normal text in floating windows.
     FloatBorder = { fg = C.blue },
-    Pmenu = { bg = O.transparent_background and C.none or U.darken(C.surface0, 0.8, C.crust), fg = C.overlay2 }, -- Popup menu: normal item.
+    Pmenu = {
+      bg = O.transparent_background and C.none or U.darken(C.surface0, 0.8, C.crust),
+      fg = C.overlay2,
+    }, -- Popup menu: normal item.
     PmenuSel = { fg = C.text, bg = C.surface1, style = { "bold" } }, -- Popup menu: selected item.
     PmenuSbar = { bg = C.surface1 }, -- Popup menu: scrollbar.
     PmenuThumb = { bg = C.overlay0 }, -- Popup menu: Thumb of the scrollbar.
@@ -54,8 +66,14 @@ function M.get()
     SpellCap = { sp = C.yellow, style = { "undercurl" } }, -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
     SpellLocal = { sp = C.blue, style = { "undercurl" } }, -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
     SpellRare = { sp = C.green, style = { "undercurl" } }, -- Word that is recognized by the spellchecker as one that is hardly ever used.  |spell| Combined with the highlighting used otherwise.
-    StatusLine = { fg = C.text, bg = O.transparent_background and C.none or C.mantle }, -- status line of current window
-    StatusLineNC = { fg = C.surface1, bg = O.transparent_background and C.none or C.mantle }, -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
+    StatusLine = {
+      fg = C.text,
+      bg = O.transparent_background and C.none or C.mantle,
+    }, -- status line of current window
+    StatusLineNC = {
+      fg = C.surface1,
+      bg = O.transparent_background and C.none or C.mantle,
+    }, -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
     TabLine = { bg = C.mantle, fg = C.surface1 }, -- tab pages line, not active tab page label
     TabLineFill = { bg = C.black }, -- tab pages line, where there are no labels
     TabLineSel = { fg = C.green, bg = C.surface1 }, -- tab pages line, active tab page label
