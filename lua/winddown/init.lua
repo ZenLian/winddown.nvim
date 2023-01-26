@@ -10,6 +10,13 @@ local M = {
   _first_active = nil,
   _last_active = nil,
   _coding_time = 0,
+
+  _due_time = {
+    coding = 0,
+    fading = 0,
+    over = 0,
+    breaking = 0,
+  },
 }
 
 M.setup = function(opts)
@@ -19,11 +26,20 @@ M.setup = function(opts)
 
   M._timer = vim.loop.new_timer()
   M.status = "stopped"
-  vim.api.nvim_create_augroup("winddown", { clear = true })
-  vim.api.nvim_create_autocmd({ "CursorMoved", "InsertCharPre" }, {
-    group = "winddown",
-    callback = M.record_activity,
-  })
+  M._due_time.coding = config.coding_minutes * 60 * 1000
+  M._due_time.fading = config.fade_minutes * 60 * 1000
+  M._due_time.over = (config.coding_minutes + config.fade_minutes) * 60 * 1000
+  M._due_time.breaking = config.break_minutes * 60 * 1000
+
+  if config.events == "KeyPress" then
+    vim.on_key(M.record_activity, fader.namespace)
+  else
+    vim.api.nvim_create_augroup("winddown", { clear = true })
+    vim.api.nvim_create_autocmd(config.events, {
+      group = "winddown",
+      callback = M.record_activity,
+    })
+  end
 
   M._setup = true
   if config.auto_start then
@@ -50,7 +66,6 @@ M.reset = function()
   M._last_active = nil
   M._coding_time = 0
   fader.reset()
-  -- M.change_state("stopped")
   M.start()
 end
 
@@ -59,24 +74,25 @@ M.update = function()
   local break_time = now - M._last_active
 
   -- break time due
-  if break_time >= config.break_minutes * 60 * 1000 then
-    logger.debug("break time due")
+  if break_time >= M._due_time.breaking and M.change_state("breaking") then
     M.reset()
     return
   end
 
   M._coding_time = now - M._first_active
 
-  -- really need a break!
-  if M._coding_time >= (config.coding_minutes + config.fade_minutes) * 60 * 1000 then
-    M.change_state("overtime")
-    return
-  end
-
   -- need a break!
-  if M._coding_time >= config.coding_minutes * 60 * 1000 then
-    M.change_state("fading")
-    local percentage = (M._coding_time - config.coding_minutes * 60 * 1000) / (config.fade_minutes * 60 * 1000)
+  if M._coding_time >= M._due_time.coding then
+    if M.status == "overtime" then
+      return
+    elseif M._coding_time >= M._due_time.over then
+      -- really need a break!
+      -- donot return here, make sure the last frame fade out
+      M.change_state("overtime")
+    else
+      M.change_state("fading")
+    end
+    local percentage = (M._coding_time - M._due_time.coding) / M._due_time.fading
     fader.fade(percentage)
     return
   end
@@ -87,10 +103,12 @@ M.record_activity = function()
 end
 
 M.change_state = function(state)
-  if M.status ~= state then
-    logger.debug("state: %s", state)
-    M.status = state
+  if M.status == state then
+    return false
   end
+  logger.debug("state: %s", state)
+  M.status = state
+  return true
 end
 
 return M

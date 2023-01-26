@@ -3,11 +3,12 @@ local util = require("winddown.util")
 local M = {}
 
 local defaults = {
-  coding_minutes = 25,
-  fade_minutes = 5,
-  break_minutes = 5,
+  coding_minutes = 25, -- keep coding for 25 minutes, colors will start fading out
+  fade_minutes = 5, -- time before colors completely faded
+  break_minutes = 5, -- no activity in 5 minutes, then colors will be normal
   fps = 12,
   auto_start = true,
+  events = "KeyPress", -- "KeyPress" for every key input, or events like `{ "CursorMoved", "InsertCharPre" }`
   integrations = {
     treesitter = true,
   },

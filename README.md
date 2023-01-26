@@ -1,7 +1,8 @@
 # winddown.nvim
 
-- Neovim port of [vscode-winddown](https://github.com/schneefux/vscode-winddown)
-- Remind you of screen time by fading out your colorscheme.
+Remind you of screen time by fading out your colorscheme.
+
+(Neovim port of [vscode-winddown](https://github.com/schneefux/vscode-winddown))
 
 ## Install
 
@@ -22,12 +23,13 @@ require("lazy").setup {
 ## Configuration
 
 ```lua
-local defaults = {
-  coding_minutes = 25,
-  fade_minutes = 5,
-  break_minutes = 5,
+require('winddown').setup {
+  coding_minutes = 25, -- keep coding for 25 minutes, colors will start fading out
+  fade_minutes = 5, -- time before colors completely faded
+  break_minutes = 5, -- no activity in 5 minutes, then colors will be normal
   fps = 12,
   auto_start = true,
+  events = "KeyPress", -- "KeyPress" for every key input, or events like `{ "CursorMoved", "InsertCharPre" }`
   integrations = {
     treesitter = true,
   },

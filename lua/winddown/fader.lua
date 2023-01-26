@@ -22,8 +22,9 @@ M.cache_highlight = function()
 
   -- all highlight groups
   local syntax = require("winddown.groups.syntax").get()
+  local editor = require("winddown.groups.editor").get()
   local integrations = require("winddown.groups.integrations").get()
-  local groups = vim.tbl_deep_extend("keep", config.highlights, syntax, integrations)
+  local groups = vim.tbl_deep_extend("keep", config.highlights, editor, syntax, integrations)
   local fg, bg = groups["Normal"].fg, groups["Normal"].bg
 
   for name, hl in pairs(groups) do
@@ -43,11 +44,13 @@ M.cache_highlight = function()
     if vim.tbl_isempty(hl) then
       hl.fg = "fg"
     end
-    if hl.fg == "fg" then
-      hl.fg = fg
-    end
-    if hl.bg == "bg" then
-      hl.bg = bg
+    for _, key in ipairs { "fg", "bg" } do
+      if hl[key] == "fg" then
+        hl[key] = fg
+      end
+      if hl[key] == "bg" then
+        hl[key] = bg
+      end
     end
   end
   M.hltarget = groups
